@@ -1,0 +1,14 @@
+body{
+
+}
+
+#game-board{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 10%;   
+}
+
+canvas{
+    border: 1px solid;
+}
