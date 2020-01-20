@@ -157,13 +157,23 @@ class Siego{
         }
     }
 
+    // playSound(audio, direction){
+    //     panning(audio, direction)
+    //     // let htmlAudio = panning(audio, direction)
+    //     // if(interval % 40) htmlAudio.pause()
+    // }
+
     sectionOne(){ //x de 80 a 180, y de 0 a 330, checa profundida en y
         switch (this.orientation){
             case 'N':
-                if(this.y > 0 && this.y < 85){
-                    panning(audios.sink, -1) //left
+                if (this.y > 0 && this.y < 85){
+                    panning(audios.sink, -1).pause()
+                    panning(audios.sink, -1).play()
+                    // this.playSound(audios.sink, -1) //left
                 } else if(this.y >= 85 && this.y < 185){
-                    panning(audios.stove, -1) //left
+                    panning(audios.stove, -1).pause()
+                    panning(audios.stove, -1).play() //left
+                    // this.playSound(audios.stove, -1)
                 } else if(this.y >= 185 && this.y < 260){
                     panning(audios.microwave, -1) //left
                 } else if(this.y >= 330){
@@ -171,16 +181,16 @@ class Siego{
                 }
                 break
             case 'S':
-                if(this.y > 0 && this.y < 85){
-                    panning(audios.sink, 1) //right
-                } else if(this.y >= 85 && this.y < 185){
-                    panning(audios.stove, 1) //right
-                } else if(this.y >= 185 && this.y < 260){
-                    panning(audios.microwave, 1) //right
-                } else if(this.y >= 330){
-                    panning(audios.fridge, 1) //right
-                    panning(audios.books, 0)
-                }
+                // if(this.y > 0 && this.y < 85){
+                //     panning(audios.sink, 1) //right
+                // } else if(this.y >= 85 && this.y < 185){
+                //     panning(audios.stove, 1) //right
+                // } else if(this.y >= 185 && this.y < 260){
+                //     panning(audios.microwave, 1) //right
+                // } else if(this.y >= 330){
+                //     panning(audios.fridge, 1) //right
+                //     panning(audios.books, 0) //both
+                // }
                 break
             case 'E':
                 break
@@ -213,9 +223,8 @@ function panning(audio, panSide){ //panSide needs number
     source.connect(panNode)
     panNode.connect(audioCtx.destination)
     panNode.pan.value = panSide
-    console.log(panNode.pan)
-    htmlAudio.play()
-    return htmlAudio //para poder pausarlo desde afuera
+    // htmlAudio.play()
+    return htmlAudio
 }
 
 
