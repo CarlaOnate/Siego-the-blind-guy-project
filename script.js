@@ -1,6 +1,8 @@
 
 let canvas = document.querySelector('canvas')
 let ctx = canvas.getContext('2d')
+const orientation = ['S','W','N','E']
+let interval
 
 const audios = {
     fridge: 'audioSource/fridge.mp3',
@@ -48,8 +50,99 @@ class Background{
     }
 }
 
+class Siego{
+    constructor(){
+        this.x = 100
+        this.y = 50
+        this.sx = 0
+        this.sy = 0
+        this.width = 60
+        this.height = 50
+        this.orientation = 'S'
+        this.imgFront = new Image()
+        this.imgFront.src = images.siegoFront
+        this.imgBack = new Image()
+        this.imgBack.src = images.siegoBack
+        this.imgRight = new Image()
+        this.imgRight.src = images.siegoRight
+        this.imgLeft = new Image()
+        this.imgLeft.src = images.siegoLeft
+        this.imgBack.onload = () => {this.draw()}
+    }
+
+    draw(){
+        if(this.sx >= 644) this.sx = 0
+        switch(this.orientation){
+            case 'N':
+                ctx.drawImage(this.imgFront, this.sx, this.sy, 214, 126, this.x, this.y, this.width, this.height)
+                break
+            case 'E':
+                ctx.drawImage(this.imgRight, this.sx, this.sy, this.width, this.height)
+                break
+            case 'W':
+                ctx.drawImage(this.imgLeft, this.sx, this.sy, this.width, this.height)
+                break
+            case 'S':
+                ctx.drawImage(this.imgFront, this.sx, this.sy, 200, 100, this.x, this.y, this.width, this.height)
+                break
+           }
+    }
+
+    move(){
+        this.sx += 214
+    }
+
+    goForward(orientation){
+        switch(this.orientation){
+            case this.orientation === 'N':
+                this.y -= 10
+                this.move()
+                break
+            case this.orientation === 'E':
+                this.x += 10
+                this.move()
+                break
+            case this.orientation === 'W':
+                this.x -= 10
+                this.move()
+                break
+            case this.orientation === 'S':
+                this.y += 10
+                this.move()
+                break
+            default: console.error('orientation is undified, perhapss')
+        }
+    }
+
+    goBack(){
+        switch (this.orientation){
+            case this.orientation === 'N':
+                this.orientation = 'S'
+                break
+            case this.orientation === 'S':
+                this.orientation = 'N'
+                break
+            case this.orientation === 'E':
+                this.draw(this.imgLeft)
+                break
+            case this.orientation === 'W':
+                this.draw(this.imgRight)
+                break
+            default: console.error('orientation is undifined, perhaps')
+        }
+
+    }
+
+}
 
 const bg = new Background()
+const siego = new Siego()
+
+function update(){
+    bg.draw()
+    siego.draw()
+}
+
 
 //Funcion para separar audio
 function panning(audio, panSide){ //panSide needs number
@@ -66,10 +159,26 @@ function panning(audio, panSide){ //panSide needs number
     htmlAudio.play()
 }
 
+function startGame(){
+    if(interval) return
+    interval = setInterval(update, 1000/40)
+}
+
 //Para el sonido puedes borrar esto
 window.onload = function() {
     document.getElementById("start-button").onclick = function() {
-        bg.draw()
-        ctx.fillRect(180, 0, 10, 10)
+        startGame()
     }
 }
+
+document.addEventListener('keydown', ({ keyCode }) => {
+    switch (keyCode) {
+        case 40:
+            siego.goBack()
+            break
+        case 38:
+            siego.goForward(siego.orientation)
+            break
+        default: console.error('Key not valid')
+    }
+  })
