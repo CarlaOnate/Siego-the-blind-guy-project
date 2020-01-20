@@ -1,8 +1,9 @@
-
 let canvas = document.querySelector('canvas')
 let ctx = canvas.getContext('2d')
 const orientation = ['S','W','N','E']
 let interval
+let soundArr = []
+frames = 0
 
 const audios = {
     fridge: 'audioSource/fridge.mp3',
@@ -44,6 +45,10 @@ class Background{
         this.img = new Image()
         this.img.src = images.bg
         this.img.onload = () => {this.draw()}
+    }
+
+    drawGameOver(){
+        ctx.drawImage(images.gameOver, canvas.width, canvas.height)
     }
 
     draw(){
@@ -89,11 +94,6 @@ class Siego{
                 break
            }
     }
-
-    drawGameOver(){
-        ctx.drawImage(images.gameOver, canvas.width, canvas.height)
-    }
-
     move(){
         this.sx += 214
     }
@@ -157,40 +157,35 @@ class Siego{
         }
     }
 
-    // playSound(audio, direction){
-    //     panning(audio, direction)
-    //     // let htmlAudio = panning(audio, direction)
-    //     // if(interval % 40) htmlAudio.pause()
-    // }
+    playSound(audio, direction){
+        soundArr.forEach(sound => sound.pause())
+        panning(audio, direction)
+    }
 
     sectionOne(){ //x de 80 a 180, y de 0 a 330, checa profundida en y
         switch (this.orientation){
             case 'N':
                 if (this.y > 0 && this.y < 85){
-                    panning(audios.sink, -1).pause()
-                    panning(audios.sink, -1).play()
-                    // this.playSound(audios.sink, -1) //left
+                    this.playSound(audios.sink, -1) //left
                 } else if(this.y >= 85 && this.y < 185){
-                    panning(audios.stove, -1).pause()
-                    panning(audios.stove, -1).play() //left
-                    // this.playSound(audios.stove, -1)
-                } else if(this.y >= 185 && this.y < 260){
-                    panning(audios.microwave, -1) //left
-                } else if(this.y >= 330){
-                    panning(audios.fridge, -1) //left
+                    this.playSound(audios.stove, -1) //left
+                } else if(this.y >= 185 && this.y < 240){
+                    this.playSound(audios.microwave, -1) //left
+                } else if(this.y >= 240 && this.y < 330){
+                    this.playSound(audios.fridge, -1) //left
                 }
                 break
             case 'S':
-                // if(this.y > 0 && this.y < 85){
-                //     panning(audios.sink, 1) //right
-                // } else if(this.y >= 85 && this.y < 185){
-                //     panning(audios.stove, 1) //right
-                // } else if(this.y >= 185 && this.y < 260){
-                //     panning(audios.microwave, 1) //right
-                // } else if(this.y >= 330){
-                //     panning(audios.fridge, 1) //right
-                //     panning(audios.books, 0) //both
-                // }
+                if (this.y > 0 && this.y < 85){
+                    this.playSound(audios.sink, 1)//right
+                } else if(this.y >= 85 && this.y < 185){
+                    this.playSound(audios.stove, 1) //right
+                } else if(this.y >= 185 && this.y < 240){
+                    this.playSound(audios.microwave, 1) //right
+                } else if(this.y >= 240 && this.y < 330){
+                    this.playSound(audios.fridge, 1) //right
+                    if(frames%80) this.playSound(audios.books, 0) //Both
+                }
                 break
             case 'E':
                 break
@@ -206,6 +201,7 @@ const bg = new Background()
 const siego = new Siego()
 
 function update(){
+    frames++
     bg.draw()
     siego.draw()
 }
@@ -217,6 +213,8 @@ function panning(audio, panSide){ //panSide needs number
     let htmlAudio = document.createElement('audio')
     htmlAudio.src = `${audio}`
     htmlAudio.loop = false //para que no repita
+     if (soundArr.includes(htmlAudio.src)) return
+    soundArr.push(htmlAudio)
     let source = audioCtx.createMediaElementSource(htmlAudio)
     let panNode = audioCtx.createStereoPanner()
     audioCtx.destination
