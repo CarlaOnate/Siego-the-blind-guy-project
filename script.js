@@ -71,10 +71,10 @@ class Siego{
     }
 
     draw(){
-        if(this.sx >= 644) this.sx = 0
+        if(this.sx >= 642) this.sx = 0
         switch(this.orientation){
             case 'N':
-                ctx.drawImage(this.imgFront, this.sx, this.sy, 214, 126, this.x, this.y, this.width, this.height)
+                ctx.drawImage(this.imgFront, this.sx, this.sy, 214, 120, this.x, this.y, this.width, this.height)
                 break
             case 'E':
                 ctx.drawImage(this.imgRight, this.sx, this.sy, this.width, this.height)
@@ -83,7 +83,7 @@ class Siego{
                 ctx.drawImage(this.imgLeft, this.sx, this.sy, this.width, this.height)
                 break
             case 'S':
-                ctx.drawImage(this.imgFront, this.sx, this.sy, 200, 100, this.x, this.y, this.width, this.height)
+                ctx.drawImage(this.imgBack, this.sx, this.sy, 214, 120, this.x, this.y, this.width, this.height)
                 break
            }
     }
@@ -94,19 +94,19 @@ class Siego{
 
     goForward(orientation){
         switch(this.orientation){
-            case this.orientation === 'N':
+            case 'N':
                 this.y -= 10
                 this.move()
                 break
-            case this.orientation === 'E':
+            case 'E':
                 this.x += 10
                 this.move()
                 break
-            case this.orientation === 'W':
+            case 'W':
                 this.x -= 10
                 this.move()
                 break
-            case this.orientation === 'S':
+            case 'S':
                 this.y += 10
                 this.move()
                 break
@@ -116,21 +116,43 @@ class Siego{
 
     goBack(){
         switch (this.orientation){
-            case this.orientation === 'N':
+            case 'N':
                 this.orientation = 'S'
                 break
-            case this.orientation === 'S':
+            case 'S':
                 this.orientation = 'N'
                 break
-            case this.orientation === 'E':
+            case 'E':
                 this.draw(this.imgLeft)
                 break
-            case this.orientation === 'W':
+            case 'W':
                 this.draw(this.imgRight)
                 break
             default: console.error('orientation is undifined, perhaps')
         }
 
+    }
+
+    checkSound(orientation){
+        //section1
+        switch (this.orientation){
+            case 'N':
+                if(x>0 && x<80){
+
+                }
+                this.orientation = 'S'
+                break
+            case 'S':
+                this.orientation = 'N'
+                break
+            case 'E':
+                this.draw(this.imgLeft)
+                break
+            case 'W':
+                this.draw(this.imgRight)
+                break
+            default: console.error('orientation is undifined, perhaps')
+        }
     }
 
 }
