@@ -19,10 +19,11 @@ const audios = {
     computer: 'audioSource/computerKeyboard.mp3',
     books: 'audioSource/booksFlippingPages.mp3',
     drawer: 'audioSource/drawerCutlery.mp3',
-    kitchen: 'audioSource/kitchen.mp3'
+    stove: 'audioSource/kitchen.mp3'
 }
 
 const images = {
+    gameOver: 'Images/gameOver.jpeg',
     bg: 'Images/bg-siego.png',
     romLeft: 'Images/rommie-sprite/rommie-leftW.png',
     romRight: 'Images/rommie-sprite/rommie-rightE.png',
@@ -52,6 +53,7 @@ class Background{
 
 class Siego{
     constructor(){
+        this.lives = 3
         this.x = 100
         this.y = 50
         this.sx = 0
@@ -88,29 +90,45 @@ class Siego{
            }
     }
 
+    drawGameOver(){
+        ctx.drawImage(images.gameOver, canvas.width, canvas.height)
+    }
+
     move(){
         this.sx += 214
     }
 
+    takeDamage(){
+        this.lives > 0 ? this.lives-- : gameOver()
+    }
+
     goForward(orientation){
-        switch(this.orientation){
-            case 'N':
-                this.y -= 10
-                this.move()
-                break
-            case 'E':
-                this.x += 10
-                this.move()
-                break
-            case 'W':
-                this.x -= 10
-                this.move()
-                break
-            case 'S':
-                this.y += 10
-                this.move()
-                break
-            default: console.error('orientation is undified, perhapss')
+        if(this.x <= 80 || this.y >= 290) {
+            this.x += 5
+            this.y -= 5
+            //takeDamage()
+        } else {
+             switch(this.orientation){
+                case 'N':
+                    this.y -= 10
+                    this.move()
+                    this.checkSound()
+                    break
+                case 'E':
+                    this.x += 10
+                    this.move()
+                    break
+                case 'W':
+                    this.x -= 10
+                    this.move()
+                    break
+                case 'S':
+                    this.y += 10
+                    this.move()
+                    this.checkSound()
+                    break
+                default: console.error('orientation is undified, perhapss')
+            }
         }
     }
 
@@ -133,23 +151,40 @@ class Siego{
 
     }
 
-    checkSound(orientation){
-        //section1
+    checkSound(){ //Checa que section esta el jugador
+        if(this.x > 80 && this.x <= 180){
+            this.sectionOne()
+        }
+    }
+
+    sectionOne(){ //x de 80 a 180, y de 0 a 330, checa profundida en y
         switch (this.orientation){
             case 'N':
-                if(x>0 && x<80){
-
+                if(this.y > 0 && this.y < 85){
+                    panning(audios.sink, -1) //left
+                } else if(this.y >= 85 && this.y < 185){
+                    panning(audios.stove, -1) //left
+                } else if(this.y >= 185 && this.y < 260){
+                    panning(audios.microwave, -1) //left
+                } else if(this.y >= 330){
+                    panning(audios.fridge, -1) //left
                 }
-                this.orientation = 'S'
                 break
             case 'S':
-                this.orientation = 'N'
+                if(this.y > 0 && this.y < 85){
+                    panning(audios.sink, 1) //right
+                } else if(this.y >= 85 && this.y < 185){
+                    panning(audios.stove, 1) //right
+                } else if(this.y >= 185 && this.y < 260){
+                    panning(audios.microwave, 1) //right
+                } else if(this.y >= 330){
+                    panning(audios.fridge, 1) //right
+                    panning(audios.books, 0)
+                }
                 break
             case 'E':
-                this.draw(this.imgLeft)
                 break
             case 'W':
-                this.draw(this.imgRight)
                 break
             default: console.error('orientation is undifined, perhaps')
         }
@@ -171,6 +206,7 @@ function panning(audio, panSide){ //panSide needs number
     let audioCtx = new AudioContext()
     let htmlAudio = document.createElement('audio')
     htmlAudio.src = `${audio}`
+    htmlAudio.loop = false //para que no repita
     let source = audioCtx.createMediaElementSource(htmlAudio)
     let panNode = audioCtx.createStereoPanner()
     audioCtx.destination
@@ -179,7 +215,9 @@ function panning(audio, panSide){ //panSide needs number
     panNode.pan.value = panSide
     console.log(panNode.pan)
     htmlAudio.play()
+    return htmlAudio //para poder pausarlo desde afuera
 }
+
 
 function startGame(){
     if(interval) return
