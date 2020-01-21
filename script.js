@@ -1,6 +1,6 @@
 let canvas = document.querySelector('canvas')
 let ctx = canvas.getContext('2d')
-const orientationArr = ['S','W','N','E']
+// const orientationArr = ['S','W','N','E']
 let interval
 let soundArr = []
 frames = 0
@@ -106,28 +106,28 @@ class Siego{
 
     goForward(){
         this.orientation = 'N'
-        this.y -= 10
+        this.y -= 20
         this.move()
         this.checkSound()
     }
 
     goBack(){
         this.orientation = 'S'
-        this.y += 10
+        this.y += 20
         this.move()
         this.checkSound()
     }
 
     goRight(){
         this.orientation = 'E'
-        this.x += 10
+        this.x += 20
         this.move()
         this.checkSound()
     }
 
     goLeft(){
         this.orientation = 'W'
-        this.x -= 10
+        this.x -= 20
         this.move()
         this.checkSound()
     }
@@ -137,21 +137,23 @@ class Siego{
             this.sectionOne()
         } else if(this.x > 180 && this.x < 300){
             this.sectionTwo()
-        } else if (this.x > 300 && this.x < 510){
+        } else if (this.x > 300 && this.x < 490){
             this.sectionThree()
+        } else if (this.x >= 490 && this.x < 600){
+            this.sectionFour()
         }
     }
 
     playSound(audio, direction){
         // let timeOut = setTimeout(panning, 100, [audio, direction])
         // clearTimeout(timeOut)
-        soundArr.forEach(sound => sound.pause())
         panning(audio, direction)
     }
 
     sectionOne(){ //x de 80 a 180, y de 0 a 330, checa profundida en y
         switch (this.orientation){
             case 'N':
+                soundArr.forEach(sound => sound.pause())
                 if (this.y > 0 && this.y < 85){
                     this.playSound(audios.sink, -1) //left
                 } else if(this.y >= 85 && this.y < 185){
@@ -163,6 +165,7 @@ class Siego{
                 }
                 break
             case 'S':
+              soundArr.forEach(sound => sound.pause())
                 if (this.y > 0 && this.y < 85){
                     this.playSound(audios.sink, 1)//right
                 } else if(this.y >= 85 && this.y < 185){
@@ -174,11 +177,13 @@ class Siego{
                 }
                 break
             case 'E':
+                soundArr.forEach(sound => sound.pause())
                 if(this.y >= 240 && this.y < 330){
                     this.playSound(audios.books, 1) //Right
                 }
                 break
             case 'W':
+                soundArr.forEach(sound => sound.pause())
                 if (this.y > 0 && this.y < 85){
                     this.playSound(audios.sink, 0)//Both
                 } else if(this.y >= 85 && this.y < 185){
@@ -196,6 +201,7 @@ class Siego{
     sectionTwo(){ //x de 180 a 300, y de 0 a 330, checa profundida en y
         switch (this.orientation){
             case 'N':
+                soundArr.forEach(sound => sound.pause())
                 if (this.y > 0 && this.y < 90){
                     this.playSound(audios.table, 1) //right
                 }  else if(this.y >= 167 && this.y < 240){
@@ -205,6 +211,7 @@ class Siego{
                 }
                 break
             case 'S':
+                soundArr.forEach(sound => sound.pause())
                 if (this.y > 0 && this.y < 90){
                     this.playSound(audios.table, -1)//left
                 } else if(this.y >= 167 && this.y < 240){
@@ -212,10 +219,11 @@ class Siego{
                 } else if(this.y >= 270 && this.y < 330){
                     this.playSound(audios.books, 0) //Both
                 } else {
-                    this.playSound(audiso.empty, 0)
+                    this.playSound(audios.empty, 0)
                 }
                 break
             case 'E':
+                soundArr.forEach(sound => sound.pause())
                 if (this.y > 0 && this.y < 90){
                     this.playSound(audios.table, 0)//Both
                 } else if(this.y >= 167 && this.y < 240){
@@ -227,6 +235,7 @@ class Siego{
                 }
                 break
             case 'W':
+                soundArr.forEach(sound => sound.pause())
                 if(this.y >= 270 && this.y < 330){
                     this.playSound(audios.books, -1) //Left
                 } else {
@@ -237,24 +246,27 @@ class Siego{
         }
     }
 
-    sectionThree(){ //x de 300 a 510, y de 0 a 330, checa profundida en y
+    sectionThree(){ //x de 300 a 490, y de 0 a 330, checa profundida en y
         switch (this.orientation){
             case 'N':
-                if (this.y > 100 && this.y < 169){
+                soundArr.forEach(sound => sound.pause())
+                if (this.y >= 70 && this.y < 150){
                     this.playSound(audios.table, 0) //Both
                 }  else if(this.y >= 239 && this.y < 330){
                     this.playSound(audios.couch, 0) //Both
                 }
                 break
             case 'S':
-                if (this.y > 100 && this.y < 169){
+                soundArr.forEach(sound => sound.pause())
+                if (this.y >= 80 && this.y < 169){
                     this.playSound(audios.couch, 0)//Both
-                } else if(this.y >= 239 && this.y < 330){
+                } else if(this.y >= 220 && this.y < 330){
                     this.playSound(audios.tv, 0) //Both
                 }
                 break
             case 'E':
-                if (this.y > 100 && this.y < 169){
+                soundArr.forEach(sound => sound.pause())
+                if (this.y >= 80 && this.y < 150){
                     this.playSound(audios.table, -1)//Left
                     this.playSound(audios.couch, 1)//Right
                 } else if(this.y >= 239 && this.y < 330){
@@ -263,7 +275,50 @@ class Siego{
                 }
                 break
             case 'W':
-                if (this.y > 100 && this.y < 169){
+                soundArr.forEach(sound => sound.pause())
+                if (this.y >= 80 && this.y < 150){
+                    this.playSound(audios.table, 1)//Right
+                    this.playSound(audios.couch, -1)//Left
+                } else if(this.y >= 240 && this.y < 330){
+                    this.playSound(audios.couch, 1) //Right
+                    this.playSound(audios.tv, -1) //Left
+                }
+                break
+            default: console.error('orientation is undifined, perhaps')
+        }
+    }
+
+    sectionFour(){ //x de 490 a 550, y de 0 a 330, checa profundida en y
+        switch (this.orientation){
+            case 'N':
+                soundArr.forEach(sound => sound.pause())
+                if (this.y >= 70 && this.y < 150){
+                    this.playSound(audios.table, 0) //Both
+                }  else if(this.y >= 239 && this.y < 330){
+                    this.playSound(audios.couch, 0) //Both
+                }
+                break
+            case 'S':
+                soundArr.forEach(sound => sound.pause())
+                if (this.y >= 80 && this.y < 169){
+                    this.playSound(audios.couch, 0)//Both
+                } else if(this.y >= 220 && this.y < 330){
+                    this.playSound(audios.tv, 0) //Both
+                }
+                break
+            case 'E':
+                soundArr.forEach(sound => sound.pause())
+                if (this.y >= 80 && this.y < 150){
+                    this.playSound(audios.table, -1)//Left
+                    this.playSound(audios.couch, 1)//Right
+                } else if(this.y >= 239 && this.y < 330){
+                    this.playSound(audios.couch, -1) //Left
+                    this.playSound(audios.tv, 1) //Right
+                }
+                break
+            case 'W':
+                soundArr.forEach(sound => sound.pause())
+                if (this.y >= 80 && this.y < 150){
                     this.playSound(audios.table, 1)//Right
                     this.playSound(audios.couch, -1)//Left
                 } else if(this.y >= 270 && this.y < 330){
