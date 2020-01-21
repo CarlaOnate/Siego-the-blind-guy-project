@@ -143,6 +143,8 @@ class Siego{
             this.sectionFour()
         } else if(this.x >= 600 && this.x < 690){
             this.sectionFive()
+        } else if(this.x >= 690 && this.x < 800){
+            this.sectionSix()
         }
     }
 
@@ -369,6 +371,34 @@ class Siego{
                 } else {
                     this.playSound(audios.empty, 0)//Both
                 }
+                break
+            default: console.error('orientation is undifined, perhaps')
+        }
+    }
+
+    sectionSix(){ //x de 690 a 800, y de 0 a 330, checa profundida en y
+        switch (this.orientation){
+            case 'N':
+                soundArr.forEach(sound => sound.pause())
+                if (this.y >= 40 && this.y < 110){
+                    this.playSound(audios.door, 1) //Rgiht
+                }
+                break
+            case 'S':
+                soundArr.forEach(sound => sound.pause())
+                if (this.y >= 40 && this.y < 110){
+                    this.playSound(audios.door, -1)//Left
+                }
+                break
+            case 'E':
+                soundArr.forEach(sound => sound.pause())
+                if (this.y >= 40 && this.y < 110){
+                    this.playSound(audios.door, 0)//Left
+                }
+                break
+            case 'W':
+                soundArr.forEach(sound => sound.pause())
+                this.playSound(audios.empty, 0)
                 break
             default: console.error('orientation is undifined, perhaps')
         }
