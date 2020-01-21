@@ -453,19 +453,56 @@ class Siego{
 
 class Rommie{
     constructor(){
-        this.x = 0
-        this.y = 0
-        this.time = 0
+        this.x = 320
+        this.y = 190
+        this.sx = 0
+        this.sy = 0
+        this.width = 60
+        this.height = 60
+        this.orientation = 'S'
+        this.imgFront = new Image()
+        this.imgFront.src = images.romFront
+        this.imgBack = new Image()
+        this.imgBack.src = images.romBack
+        this.imgRight = new Image()
+        this.imgRight.src = images.romRight
+        this.imgLeft = new Image()
+        this.imgLeft.src = images.romLeft
+        this.imgBack.onload = () => {this.draw()}
+    }
+
+    draw(){
+        if(this.sx >= 642) this.sx = 0
+        switch(this.orientation){
+            case 'N':
+                ctx.drawImage(this.imgFront, this.sx, this.sy, 214, 120, this.x, this.y, this.width, this.height)
+                break
+            case 'E':
+                ctx.drawImage(this.imgRight, this.sx, this.sy, 196, 203, this.x, this.y, this.width, this.height)
+                break
+            case 'W':
+                ctx.drawImage(this.imgLeft, this.sx, this.sy, 196, 203, this.x, this.y, this.width, this.height)
+                break
+            case 'S':
+                ctx.drawImage(this.imgBack, this.sx, this.sy, 214, 120, this.x, this.y, this.width, this.height)
+                break
+           }
+    }
+
+    goKitchen(){
+
     }
 }
 
 const bg = new Background()
 const siego = new Siego()
+const rommie = new Rommie()
 
 function update(){
     frames++
     bg.draw()
     siego.draw()
+    rommie.draw()
 }
 
 
