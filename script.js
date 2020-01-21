@@ -1,12 +1,11 @@
 let canvas = document.querySelector('canvas')
 let ctx = canvas.getContext('2d')
-const orientation = ['S','W','N','E']
+const orientationArr = ['S','W','N','E']
 let interval
 let soundArr = []
 frames = 0
 
 const audios = {
-    fridge: 'audioSource/fridge.mp3',
     keys: 'audioSource/keys.mp3',
     hit: 'audioSource/auch.mp3',
     window: 'audioSource/windowWind.mp3',
@@ -25,7 +24,7 @@ const audios = {
 
 const images = {
     gameOver: 'Images/gameOver.jpeg',
-    bg: 'Images/bg-siego.png',
+    bg: 'Images/bg.png',
     romLeft: 'Images/rommie-sprite/rommie-leftW.png',
     romRight: 'Images/rommie-sprite/rommie-rightE.png',
     romBack: 'Images/rommie-sprite/rommie-backS.png',
@@ -64,7 +63,7 @@ class Siego{
         this.sx = 0
         this.sy = 0
         this.width = 60
-        this.height = 50
+        this.height = 60
         this.orientation = 'S'
         this.imgFront = new Image()
         this.imgFront.src = images.siegoFront
@@ -84,10 +83,10 @@ class Siego{
                 ctx.drawImage(this.imgFront, this.sx, this.sy, 214, 120, this.x, this.y, this.width, this.height)
                 break
             case 'E':
-                ctx.drawImage(this.imgRight, this.sx, this.sy, this.width, this.height)
+                ctx.drawImage(this.imgRight, this.sx, this.sy, 196, 203, this.x, this.y, this.width, this.height)
                 break
             case 'W':
-                ctx.drawImage(this.imgLeft, this.sx, this.sy, this.width, this.height)
+                ctx.drawImage(this.imgLeft, this.sx, this.sy, 196, 203, this.x, this.y, this.width, this.height)
                 break
             case 'S':
                 ctx.drawImage(this.imgBack, this.sx, this.sy, 214, 120, this.x, this.y, this.width, this.height)
@@ -102,8 +101,8 @@ class Siego{
         this.lives > 0 ? this.lives-- : gameOver()
     }
 
-    goForward(orientation){
-        if(this.x <= 80 || this.y >= 290) {
+    goForward(){
+        if(this.x <= 80 || this.y >= 290) { //BOUNDARIES, faltan
             this.x += 5
             this.y -= 5
             //takeDamage()
@@ -113,15 +112,17 @@ class Siego{
                     this.y -= 10
                     this.move()
                     this.checkSound()
-                    break
+                break
                 case 'E':
                     this.x += 10
                     this.move()
-                    break
+                    this.checkSound()
+                break
                 case 'W':
                     this.x -= 10
                     this.move()
-                    break
+                    this.checkSound()
+                break
                 case 'S':
                     this.y += 10
                     this.move()
@@ -141,14 +142,32 @@ class Siego{
                 this.orientation = 'N'
                 break
             case 'E':
-                this.draw(this.imgLeft)
+                this.orientation = 'W'
                 break
             case 'W':
-                this.draw(this.imgRight)
+                this.orientation = 'E'
                 break
             default: console.error('orientation is undifined, perhaps')
         }
 
+    }
+
+    goRight(){
+        let index = orientationArr.indexOf(this.orientation)
+        if(index === orientationArr.length-1) {
+            this.orientation = orientationArr[0]
+        } else {
+            this.orientation = orientationArr[index+1]
+        }
+    }
+
+    goLeft(){
+        let index = orientationArr.indexOf(this.orientation)
+        if(index === 0) {
+            this.orientation = orientationArr[orientationArr.length-1]
+        } else {
+            this.orientation = orientationArr[index-1]
+        }
     }
 
     checkSound(){ //Checa que section esta el jugador
@@ -172,7 +191,7 @@ class Siego{
                 } else if(this.y >= 185 && this.y < 240){
                     this.playSound(audios.microwave, -1) //left
                 } else if(this.y >= 240 && this.y < 330){
-                    this.playSound(audios.fridge, -1) //left
+                    this.playSound(audios.books, -1) //left
                 }
                 break
             case 'S':
@@ -183,8 +202,7 @@ class Siego{
                 } else if(this.y >= 185 && this.y < 240){
                     this.playSound(audios.microwave, 1) //right
                 } else if(this.y >= 240 && this.y < 330){
-                    this.playSound(audios.fridge, 1) //right
-                    if(frames%80) this.playSound(audios.books, 0) //Both
+                    this.playSound(audios.books, 0) //Both
                 }
                 break
             case 'E':
@@ -221,7 +239,7 @@ function panning(audio, panSide){ //panSide needs number
     source.connect(panNode)
     panNode.connect(audioCtx.destination)
     panNode.pan.value = panSide
-    // htmlAudio.play()
+    htmlAudio.play()
     return htmlAudio
 }
 
@@ -244,8 +262,13 @@ document.addEventListener('keydown', ({ keyCode }) => {
             siego.goBack()
             break
         case 38:
-            siego.goForward(siego.orientation)
+            siego.goForward()
             break
-        default: console.error('Key not valid')
+        case 39:
+            siego.goRight()
+        break
+        case 37:
+            siego.goLeft()
+        default: console.warn('Key not valid')
     }
   })
