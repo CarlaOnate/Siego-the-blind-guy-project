@@ -6,6 +6,9 @@ let soundArr = []
 frames = 0
 
 const audios = {
+    empty: 'audioSource/empty.mp3',
+    auch: 'audioSource/auch.mp3',
+    phone: 'audioSource/phone.mp3',
     keys: 'audioSource/keys.mp3',
     hit: 'audioSource/auch.mp3',
     window: 'audioSource/windowWind.mp3',
@@ -149,7 +152,6 @@ class Siego{
                 break
             default: console.error('orientation is undifined, perhaps')
         }
-
     }
 
     goRight(){
@@ -206,8 +208,22 @@ class Siego{
                 }
                 break
             case 'E':
+                if(this.y >= 240 && this.y < 330){
+                    this.playSound(audios.books, 1) //Right
+                } else {
+                    this.playSound(audios.empty, 0) //Both Nothing
+                }
                 break
             case 'W':
+                if (this.y > 0 && this.y < 85){
+                    this.playSound(audios.sink, 0)//Both
+                } else if(this.y >= 85 && this.y < 185){
+                    this.playSound(audios.stove, 0) //Both
+                } else if(this.y >= 185 && this.y < 240){
+                    this.playSound(audios.microwave, 0) //Both
+                } else if(this.y >= 240 && this.y < 330){
+                    this.playSound(audios.books, 0) //Both
+                }
                 break
             default: console.error('orientation is undifined, perhaps')
         }
