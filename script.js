@@ -141,6 +141,8 @@ class Siego{
             this.sectionThree()
         } else if (this.x >= 490 && this.x < 600){
             this.sectionFour()
+        } else if(this.x >= 600 && this.x < 690){
+            this.sectionFive()
         }
     }
 
@@ -207,7 +209,7 @@ class Siego{
                 }  else if(this.y >= 167 && this.y < 240){
                     this.playSound(audios.couch, 1) //right
                 } else {
-                    this.playSound(audiso.empty, 0)
+                    this.playSound(audios.empty, 0)
                 }
                 break
             case 'S':
@@ -239,7 +241,7 @@ class Siego{
                 if(this.y >= 270 && this.y < 330){
                     this.playSound(audios.books, -1) //Left
                 } else {
-                    this.playSound(audiso.empty, 0)
+                    this.playSound(audios.empty, 0)
                 }
                 break
             default: console.error('orientation is undifined, perhaps')
@@ -294,7 +296,7 @@ class Siego{
                 soundArr.forEach(sound => sound.pause())
                 if (this.y >= 0 && this.y < 90){
                     this.playSound(audios.table, -1) //Left
-                }  else if(this.y >= 167 && this.y < 200){
+                }  else if(this.y >= 167 && this.y < 210){
                     this.playSound(audios.couch, -1) //Left
                 }
                 break
@@ -302,7 +304,7 @@ class Siego{
                 soundArr.forEach(sound => sound.pause())
                 if (this.y >= 0 && this.y < 90){
                     this.playSound(audios.table, 1)//Right
-                } else if(this.y >= 167 && this.y < 200){
+                } else if(this.y >= 167 && this.y < 210){
                     this.playSound(audios.couch, 1) //Right
                 }
                 break
@@ -324,6 +326,53 @@ class Siego{
         }
     }
 
+    sectionFive(){ //x de 600 a 690, y de 0 a 330, checa profundida en y
+        switch (this.orientation){
+            case 'N':
+                soundArr.forEach(sound => sound.pause())
+                if (this.y >= 0 && this.y < 60){
+                    this.playSound(audios.window, 0) //Both
+                } else if (this.y >= 210 && this.y < 250){
+                    this.playSound(audios.computer, 1) //Right
+                } else {
+                    this.playSound(audios.empty, 0)//Both
+                }
+                break
+            case 'S':
+                soundArr.forEach(sound => sound.pause())
+                if (this.y >= 250 && this.y < 330){
+                    this.playSound(audios.phone, 0)//Both
+                } else if (this.y >= 210 && this.y < 250){
+                    this.playSound(audios.computer, -1) //Left
+                } else {
+                    this.playSound(audios.empty, 0)//Both
+                }
+                break
+            case 'E':
+                soundArr.forEach(sound => sound.pause())
+                if (this.y >= 0 && this.y < 50){
+                    this.playSound(audios.window, -1)//Left
+                } else if (this.y >= 210 && this.y < 250){
+                    this.playSound(audios.computer, 0) //Both
+                } else if(this.y >= 250 && this.y < 330){
+                    this.playSound(audios.phone, 1) //Right
+                } else {
+                    this.playSound(audios.empty, 0)//Both
+                }
+                break
+            case 'W':
+                soundArr.forEach(sound => sound.pause())
+                if (this.y >= 0 && this.y < 50){
+                    this.playSound(audios.window, 1)//Right
+                } else if(this.y >= 250 && this.y < 330){
+                    this.playSound(audios.phone, -1) //Left
+                } else {
+                    this.playSound(audios.empty, 0)//Both
+                }
+                break
+            default: console.error('orientation is undifined, perhaps')
+        }
+    }
 }
 
 const bg = new Background()
@@ -333,7 +382,6 @@ function update(){
     frames++
     bg.draw()
     siego.draw()
-    ctx.fillRect(600, 310, 5,5) 
 }
 
 
