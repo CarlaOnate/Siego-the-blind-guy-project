@@ -489,8 +489,57 @@ class Rommie{
            }
     }
 
-    goKitchen(){
+    move(){
+        this.sx = 190
+    }
 
+    goKitchen(){
+        if(this.y < 245){
+            this.goBack()
+        } else if(this.x>85){
+            this.goLeft()
+        } else if(this.x === 85){
+            this.goBack()
+        }
+    }
+
+    goComputer(){
+        if(this.x <= 85){
+            this.goForward()
+            this.goRight()
+        } else if(this.y >= 180){
+            this.goRight()
+        } else if(this.x === 700){
+            this.goBack()
+        } else if(this.y === 230){
+            if(frames % 2400 === 0){ //paso el minuto
+                checkWinner() //REVISAR LO DE LA LLAVE!, ya que acabe el tiempo.
+            }
+        }
+    }
+
+    goForward(){
+        this.orientation = 'N'
+        this.y -= 20
+        this.move()
+    }
+
+    goBack(){
+        this.orientation = 'S'
+        this.y += 20
+        this.move()
+    }
+
+    goRight(){
+        this.orientation = 'E'
+        this.x += 20
+        this.move()
+    }
+
+    goLeft(){
+        this.orientation = 'W'
+        this.x -= 20
+        this.move()
     }
 }
 
@@ -525,7 +574,7 @@ function panning(audio, panSide){ //panSide needs number
 }
 
 function gameOver(time){
-    ctx.drawImage(images.gameOver, canvas.width, canvas.height)
+    //ctx.drawImage(images.gameOver, canvas.width, canvas.height) //MARCA ERROR QUE IMAGEN NO ES VALIDA
     siego.resetValues()
     bg.resetValues()
     if(player1){
@@ -558,6 +607,10 @@ window.onload = function() {
     document.getElementById("start-button").onclick = function() {
         startGame()
         document.addEventListener('keydown', ({ keyCode }) => {
+            rommie.goKitchen()
+            if(frames % 1200 === 0){
+                this.goComputer()
+            }
             switch (keyCode) {
                 case 40:
                     siego.goBack()
