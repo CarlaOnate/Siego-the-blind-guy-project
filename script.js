@@ -4,6 +4,8 @@ let ctx = canvas.getContext('2d')
 let interval
 let soundArr = []
 frames = 0
+let player1
+let player2
 
 const audios = {
     empty: 'audioSource/empty.mp3',
@@ -49,8 +51,8 @@ class Background{
         this.img.onload = () => {this.draw()}
     }
 
-    drawGameOver(){
-        ctx.drawImage(images.gameOver, canvas.width, canvas.height)
+    resetValues(){
+        this.draw()
     }
 
     draw(){
@@ -60,6 +62,7 @@ class Background{
 
 class Siego{
     constructor(){
+        this.time = 0
         this.lives = 3
         this.x = 100
         this.y = 50
@@ -77,6 +80,13 @@ class Siego{
         this.imgLeft = new Image()
         this.imgLeft.src = images.siegoLeft
         this.imgBack.onload = () => {this.draw()}
+    }
+
+    resetValues(){
+        this.x = 100
+        this.y = 50
+        this.orientation = 'S'
+        this.lives = 3
     }
 
     draw(){
@@ -109,6 +119,7 @@ class Siego{
         this.y -= 20
         this.move()
         this.checkSound()
+        this.checkBoundaries()
     }
 
     goBack(){
@@ -116,6 +127,7 @@ class Siego{
         this.y += 20
         this.move()
         this.checkSound()
+        this.checkBoundaries()
     }
 
     goRight(){
@@ -123,6 +135,7 @@ class Siego{
         this.x += 20
         this.move()
         this.checkSound()
+        this.checkBoundaries()
     }
 
     goLeft(){
@@ -130,6 +143,7 @@ class Siego{
         this.x -= 20
         this.move()
         this.checkSound()
+        this.checkBoundaries()
     }
 
     checkSound(){ //Checa que section esta el jugador
@@ -141,9 +155,9 @@ class Siego{
             this.sectionThree()
         } else if (this.x >= 490 && this.x < 600){
             this.sectionFour()
-        } else if(this.x >= 600 && this.x < 690){
+        } else if(this.x >= 600 && this.x < 700){
             this.sectionFive()
-        } else if(this.x >= 690 && this.x < 800){
+        } else if(this.x >= 700 && this.x < 800){
             this.sectionSix()
         }
     }
@@ -152,6 +166,38 @@ class Siego{
         // let timeOut = setTimeout(panning, 100, [audio, direction])
         // clearTimeout(timeOut)
         panning(audio, direction)
+    }
+
+    checkBoundaries(){ //Vamos por secciones de y, y despues vemos lo de x.
+        if(this.y >= 0 && this.y < 168){
+            if(this.x <= 80 || this.y <= 0){ //Margen arriba, izq
+                this.takeDamage() //Left thingthis.y
+                this.x += 10
+            } else if(this.x >= 300 && this.x < 510 && this.y <= 100){
+                this.takeDamage() //Table
+                this.x += 10
+                this.y += 10
+            } else if(this.x >= 600 && this.x < 700 && this.y <= 5){
+                this.takeDamage() //Window
+                this.x += 10
+                this.y += 10
+            } else if(this.x <= 795 && this.y >= 50 && this.y <120){
+                this.takeDamage() //Door
+                this.x += 10
+                this.y -= 10
+            }
+        } else if(this.y >= 168){
+            if(this.x <= 80 || this.y >= 330){ //Margen abajo, izq
+                this.takeDamage() //Left thingthis.y
+                this.x += 10
+            } else if(this.x >= 300 && this.x < 510 && this.y < 239){
+                this.takeDamage() //Couch
+                this.y += 10
+            } else if(this.x >= 725 && this.x < 800 && this.y > 180){
+                this.takeDamage() //Computer
+                this.y -= 10
+            }
+        }
     }
 
     sectionOne(){ //x de 80 a 180, y de 0 a 330, checa profundida en y
@@ -292,7 +338,7 @@ class Siego{
         }
     }
 
-    sectionFour(){ //x de 490 a 600, y de 0 a 330, checa profundida en y
+    sectionFour(){ //x de 490 a 600, y de 0 a 330, checa profundidad en y
         switch (this.orientation){
             case 'N':
                 soundArr.forEach(sound => sound.pause())
@@ -405,6 +451,14 @@ class Siego{
     }
 }
 
+class Rommie{
+    constructor(){
+        this.x = 0
+        this.y = 0
+        this.time = 0
+    }
+}
+
 const bg = new Background()
 const siego = new Siego()
 
@@ -433,10 +487,33 @@ function panning(audio, panSide){ //panSide needs number
     return htmlAudio
 }
 
+function gameOver(time){
+    ctx.drawImage(images.gameOver, canvas.width, canvas.height)
+    siego.resetValues()
+    bg.resetValues()
+    if(player1){
+        player2 = time
+    } else {player1 = time} //para que ponga el tiempo de cada jugador
+    ctx.font = '48px'
+    ctx.fillText(checkWinner(player1, player2)) //Imprima texto con el ganador
+
+}
 
 function startGame(){
     if(interval) return
     interval = setInterval(update, 1000/40)
+}
+
+function checkWinner(time1, time2){
+    let min1 = time1/60000
+    let min2 = time2/60000
+    if(min1 > min2){
+        return `Player 2 has won, time:${min2}`
+    } else if(min2 > min1) {
+        return `Player 1 has won, time${min1}`
+    } else {
+        return `Draw`
+    }
 }
 
 //Para el sonido puedes borrar esto
