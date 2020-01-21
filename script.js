@@ -552,6 +552,10 @@ function update(){
     bg.draw()
     siego.draw()
     rommie.draw()
+    ctx.rect(300, 0, 210, 100) //, ,  width, height, es de 300 a 510x y 0 a 100y TABLE
+    ctx.rect(300, 168, 210, 71) //de 300 a 510x  y de 168 a 239y COUCH
+    ctx.stroke()
+    // this.x >= 300 && this.x < 510 && this.y < 239
 }
 
 
@@ -581,7 +585,7 @@ function gameOver(time){
         player2 = time
     } else {player1 = time} //para que ponga el tiempo de cada jugador
     ctx.font = '48px'
-    ctx.fillText(checkWinner(player1, player2)) //Imprima texto con el ganador
+    ctx.fillText(checkWinner(player1, player2), canvas.width/2, canvas.height/2) //Imprima texto con el ganador
 
 }
 
