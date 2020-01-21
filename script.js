@@ -105,76 +105,38 @@ class Siego{
     }
 
     goForward(){
-        if(this.x <= 80 || this.y >= 290) { //BOUNDARIES, faltan
-            this.x += 5
-            this.y -= 5
-            //takeDamage()
-        } else {
-             switch(this.orientation){
-                case 'N':
-                    this.y -= 10
-                    this.move()
-                    this.checkSound()
-                break
-                case 'E':
-                    this.x += 10
-                    this.move()
-                    this.checkSound()
-                break
-                case 'W':
-                    this.x -= 10
-                    this.move()
-                    this.checkSound()
-                break
-                case 'S':
-                    this.y += 10
-                    this.move()
-                    this.checkSound()
-                    break
-                default: console.error('orientation is undified, perhapss')
-            }
-        }
+        this.orientation = 'N'
+        this.y -= 10
+        this.move()
+        this.checkSound()
     }
 
     goBack(){
-        switch (this.orientation){
-            case 'N':
-                this.orientation = 'S'
-                break
-            case 'S':
-                this.orientation = 'N'
-                break
-            case 'E':
-                this.orientation = 'W'
-                break
-            case 'W':
-                this.orientation = 'E'
-                break
-            default: console.error('orientation is undifined, perhaps')
-        }
+        this.orientation = 'S'
+        this.y += 10
+        this.move()
+        this.checkSound()
     }
 
     goRight(){
-        let index = orientationArr.indexOf(this.orientation)
-        if(index === orientationArr.length-1) {
-            this.orientation = orientationArr[0]
-        } else {
-            this.orientation = orientationArr[index+1]
-        }
+        this.orientation = 'E'
+        this.x += 10
+        this.move()
+        this.checkSound()
     }
 
     goLeft(){
-        let index = orientationArr.indexOf(this.orientation)
-        if(index === 0) {
-            this.orientation = orientationArr[orientationArr.length-1]
-        } else {
-            this.orientation = orientationArr[index-1]
-        }
+        this.orientation = 'W'
+        this.x -= 10
+        this.move()
+        this.checkSound()
     }
 
     checkSound(){ //Checa que section esta el jugador
         if(this.x > 80 && this.x <= 180){
             this.sectionOne()
+        } else if(this.x > 180 && this.x < 300){
+            this.sectionTwo()
         }
     }
 
@@ -192,7 +154,7 @@ class Siego{
                     this.playSound(audios.stove, -1) //left
                 } else if(this.y >= 185 && this.y < 240){
                     this.playSound(audios.microwave, -1) //left
-                } else if(this.y >= 240 && this.y < 330){
+                } else if(this.y >= 260 && this.y < 330){
                     this.playSound(audios.books, -1) //left
                 }
                 break
@@ -203,15 +165,13 @@ class Siego{
                     this.playSound(audios.stove, 1) //right
                 } else if(this.y >= 185 && this.y < 240){
                     this.playSound(audios.microwave, 1) //right
-                } else if(this.y >= 240 && this.y < 330){
+                } else if(this.y >= 260 && this.y < 330){
                     this.playSound(audios.books, 0) //Both
                 }
                 break
             case 'E':
                 if(this.y >= 240 && this.y < 330){
                     this.playSound(audios.books, 1) //Right
-                } else {
-                    this.playSound(audios.empty, 0) //Both Nothing
                 }
                 break
             case 'W':
@@ -221,8 +181,44 @@ class Siego{
                     this.playSound(audios.stove, 0) //Both
                 } else if(this.y >= 185 && this.y < 240){
                     this.playSound(audios.microwave, 0) //Both
-                } else if(this.y >= 240 && this.y < 330){
+                } else if(this.y >= 260 && this.y < 320){
                     this.playSound(audios.books, 0) //Both
+                }
+                break
+            default: console.error('orientation is undifined, perhaps')
+        }
+    }
+
+    sectionTwo(){ //x de 80 a 180, y de 0 a 330, checa profundida en y
+        switch (this.orientation){
+            case 'N':
+                if (this.y > 0 && this.y < 100){
+                    this.playSound(audios.table, 1) //right
+                }  else if(this.y >= 167 && this.y < 240){
+                    this.playSound(audios.couch, 1) //right
+                }
+                break
+            case 'S':
+                if (this.y > 0 && this.y < 100){
+                    this.playSound(audios.table, -1)//left
+                } else if(this.y >= 167 && this.y < 240){
+                    this.playSound(audios.couch, -1) //left
+                } else if(this.y >= 270 && this.y < 330){
+                    this.playSound(audios.books, 0) //Both
+                }
+                break
+            case 'E':
+                if (this.y > 0 && this.y < 100){
+                    this.playSound(audios.table, 0)//Both
+                } else if(this.y >= 167 && this.y < 240){
+                    this.playSound(audios.couch, 0) //Both
+                } else if(this.y >= 270 && this.y < 330){
+                    this.playSound(audios.books, 1) //Right
+                }
+                break
+            case 'W':
+                if(this.y >= 270 && this.y < 330){
+                    this.playSound(audios.books, -1) //Left
                 }
                 break
             default: console.error('orientation is undifined, perhaps')
@@ -269,22 +265,21 @@ function startGame(){
 window.onload = function() {
     document.getElementById("start-button").onclick = function() {
         startGame()
+        document.addEventListener('keydown', ({ keyCode }) => {
+            switch (keyCode) {
+                case 40:
+                    siego.goBack()
+                    break
+                case 38:
+                    siego.goForward()
+                    break
+                case 39:
+                    siego.goRight()
+                break
+                case 37:
+                    siego.goLeft()
+                default: console.warn('Key not valid')
+            }
+          })
     }
 }
-
-document.addEventListener('keydown', ({ keyCode }) => {
-    switch (keyCode) {
-        case 40:
-            siego.goBack()
-            break
-        case 38:
-            siego.goForward()
-            break
-        case 39:
-            siego.goRight()
-        break
-        case 37:
-            siego.goLeft()
-        default: console.warn('Key not valid')
-    }
-  })
