@@ -64,7 +64,6 @@ class Background{
 
 class Siego{
     constructor(){
-        this.time = new Date()
         // this.lives = 3
         this.x = 100
         this.y = 50
@@ -275,7 +274,7 @@ class Siego{
                 } else if(this.y >= 167 && this.y < 240){
                     this.playSound(audios.couch, -1) //left
                 } else if(this.y >= 270 && this.y < 330){
-                    if(this.y >= 280 && this.y < 320){
+                    if(this.y >= 270 && this.y < 320){
                         if(this.x >= 230 && this.x < 290){ // 270x, 350y
                             this.playSound(audios.keys, 0) //Both
                         } else {
@@ -570,7 +569,7 @@ function update(){
     ctx.rect(300, 0, 210, 100) //, ,  width, height, es de 300 a 510x y 0 a 100y TABLE
     ctx.rect(300, 168, 210, 71) //de 300 a 510x  y de 168 a 239y COUCH
     ctx.stroke()
-    if(siego.time.getTime() === 40000) gameOver()
+    if(frames === 2400) gameOver()
 }
 
 function drawKeys(){
@@ -600,12 +599,14 @@ function panning(audio, panSide){ //panSide needs number
 function gameOver(){
     //ctx.drawImage(images.gameOver, canvas.width, canvas.height) //MARCA ERROR QUE IMAGEN NO ES VALIDA
     if(player1){
-        player2 = siego.time.getTime()
+        player2 = Math.floor(frames/40)
         ctx.font = '48px'
         ctx.fillText(checkWinner(player1, player2), canvas.width/2, canvas.height/2) //Imprima texto con el ganador
-    } else {player1 = time.getTime()} //para que ponga el tiempo de cada jugador
+    } else {player1 = Math.floor(frames/40)} //para que ponga el tiempo de cada jugador
     siego.resetValues()
     bg.resetValues()
+    key = false
+    frames = 0
 }
 
 function startGame(){
@@ -614,16 +615,10 @@ function startGame(){
 }
 
 function checkWinner(time1, time2){
-    let min1 = Math.floor(time1 / 60000);
-    let sec1 = ((time1 % 60000) / 1000).toFixed(0);
-    let elapsedTime1 = mi1 + ":" + (sec1 < 10 ? '0' : '') + sec1;
-    let min2 = Math.floor(time2 / 60000);
-    let sec2 = ((time2 % 60000) / 1000).toFixed(0);
-    let elapsedTime2 = min2 + ":" + (sec2 < 10 ? '0' : '') + sec2;
-    if(min1 > min2){
-        return `Player 2 has won, time:${elapsedTime2}`
-    } else if(min2 > min1) {
-        return `Player 1 has won, time${elapsedTime1}`
+    if(time1 > time2){
+        return `Player 2 has won, time:${time2} seconds`
+    } else if(time2 > time1) {
+        return `Player 1 has won, time${time1} seconds`
     } else {
         return `Draw`
     }
