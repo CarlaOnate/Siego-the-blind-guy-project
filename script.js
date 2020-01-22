@@ -113,8 +113,10 @@ class Siego{
     }
 
     grab(){
-        if(this.y >= imageKey.y - 20){
-            if(this.x === imageKey.x - 10|| this.x === imageKey.x || this.x === imageKey.x + 10){
+        // if(this.y >= 280 && this.y < 320){
+        //     if(this.x >= 230 && this.x < 290){ // 270x, 350y
+        if(this.y >= 280){
+            if(this.x < 290 || this.x >= 240){
                 keys = true
                 gameOver()
             }
