@@ -6,6 +6,7 @@ let soundArr = []
 frames = 0
 let player1
 let player2
+let keys = false
 
 const audios = {
     empty: 'audioSource/empty.mp3',
@@ -28,6 +29,7 @@ const audios = {
 }
 
 const images = {
+    keys: 'Images/keys.png',
     gameOver: 'Images/gameOver.jpeg',
     bg: 'Images/bg.png',
     romLeft: 'Images/rommie-sprite/rommie-leftW.png',
@@ -62,8 +64,8 @@ class Background{
 
 class Siego{
     constructor(){
-        this.time = 0
-        this.lives = 3
+        this.time = new Date()
+        // this.lives = 3
         this.x = 100
         this.y = 50
         this.sx = 0
@@ -86,7 +88,7 @@ class Siego{
         this.x = 100
         this.y = 50
         this.orientation = 'S'
-        this.lives = 3
+        // this.lives = 3
     }
 
     draw(){
@@ -110,8 +112,14 @@ class Siego{
         this.sx += 214
     }
 
-    takeDamage(){
-        this.lives > 0 ? this.lives-- : gameOver()
+    grab(){
+        if(this.y >= imageKey.y - 20){
+            if(this.x === imageKey.x - 10|| this.x === imageKey.x || this.x === imageKey.x + 10){
+                keys = true
+                gameOver()
+            }
+
+        }
     }
 
     goForward(){
@@ -119,7 +127,7 @@ class Siego{
         this.y -= 20
         this.move()
         this.checkSound()
-        this.checkBoundaries()
+        // this.checkBoundaries()
     }
 
     goBack(){
@@ -127,7 +135,7 @@ class Siego{
         this.y += 20
         this.move()
         this.checkSound()
-        this.checkBoundaries()
+        // this.checkBoundaries()
     }
 
     goRight(){
@@ -135,7 +143,7 @@ class Siego{
         this.x += 20
         this.move()
         this.checkSound()
-        this.checkBoundaries()
+        // this.checkBoundaries()
     }
 
     goLeft(){
@@ -143,7 +151,7 @@ class Siego{
         this.x -= 20
         this.move()
         this.checkSound()
-        this.checkBoundaries()
+        // this.checkBoundaries()
     }
 
     checkSound(){ //Checa que section esta el jugador
@@ -163,42 +171,40 @@ class Siego{
     }
 
     playSound(audio, direction){
-        // let timeOut = setTimeout(panning, 100, [audio, direction])
-        // clearTimeout(timeOut)
         panning(audio, direction)
     }
 
-    checkBoundaries(){ //Vamos por secciones de y, y despues vemos lo de x.
-        if(this.y >= 0 && this.y < 168){
-            if(this.x <= 80 || this.y <= 0){ //Margen arriba, izq
-                this.takeDamage() //Left thingthis.y
-                this.x += 10
-            } else if(this.x >= 300 && this.x < 510 && this.y <= 100){
-                this.takeDamage() //Table
-                this.x += 10
-                this.y += 10
-            } else if(this.x >= 600 && this.x < 700 && this.y <= 5){
-                this.takeDamage() //Window
-                this.x += 10
-                this.y += 10
-            } else if(this.x <= 795 && this.y >= 50 && this.y <120){
-                this.takeDamage() //Door
-                this.x += 10
-                this.y -= 10
-            }
-        } else if(this.y >= 168){
-            if(this.x <= 80 || this.y >= 330){ //Margen abajo, izq
-                this.takeDamage() //Left thingthis.y
-                this.x += 10
-            } else if(this.x >= 300 && this.x < 510 && this.y < 239){
-                this.takeDamage() //Couch
-                this.y += 10
-            } else if(this.x >= 725 && this.x < 800 && this.y > 180){
-                this.takeDamage() //Computer
-                this.y -= 10
-            }
-        }
-    }
+    // checkBoundaries(){ //Vamos por secciones de y, y despues vemos lo de x.
+    //     if(this.y >= 0 && this.y < 168){
+    //         if(this.x <= 80 || this.y <= 0){ //Margen arriba, izq
+    //             this.takeDamage() //Left thingthis.y
+    //             this.x += 10
+    //         } else if(this.x >= 300 && this.x < 510 && this.y <= 100){
+    //             this.takeDamage() //Table
+    //             this.x += 10
+    //             this.y += 10
+    //         } else if(this.x >= 600 && this.x < 700 && this.y <= 5){
+    //             this.takeDamage() //Window
+    //             this.x += 10
+    //             this.y += 10
+    //         } else if(this.x <= 795 && this.y >= 50 && this.y <120){
+    //             this.takeDamage() //Door
+    //             this.x += 10
+    //             this.y -= 10
+    //         }
+    //     } else if(this.y >= 168){
+    //         if(this.x <= 80 || this.y >= 330){ //Margen abajo, izq
+    //             this.takeDamage() //Left thingthis.y
+    //             this.x += 10
+    //         } else if(this.x >= 300 && this.x < 510 && this.y < 239){
+    //             this.takeDamage() //Couch
+    //             this.y += 10
+    //         } else if(this.x >= 725 && this.x < 800 && this.y > 180){
+    //             this.takeDamage() //Computer
+    //             this.y -= 10
+    //         }
+    //     }
+    // }
 
     sectionOne(){ //x de 80 a 180, y de 0 a 330, checa profundida en y
         switch (this.orientation){
@@ -267,7 +273,13 @@ class Siego{
                 } else if(this.y >= 167 && this.y < 240){
                     this.playSound(audios.couch, -1) //left
                 } else if(this.y >= 270 && this.y < 330){
-                    this.playSound(audios.books, 0) //Both
+                    if(this.y >= 280 && this.y < 320){
+                        if(this.x >= 230 && this.x < 290){ // 270x, 350y
+                            this.playSound(audios.keys, 0) //Both
+                        } else {
+                            this.playSound(audios.books, 0) //Both
+                        }
+                    }
                 } else {
                     this.playSound(audios.empty, 0)
                 }
@@ -550,14 +562,20 @@ const rommie = new Rommie()
 function update(){
     frames++
     bg.draw()
+    drawKeys()
     siego.draw()
     rommie.draw()
     ctx.rect(300, 0, 210, 100) //, ,  width, height, es de 300 a 510x y 0 a 100y TABLE
     ctx.rect(300, 168, 210, 71) //de 300 a 510x  y de 168 a 239y COUCH
     ctx.stroke()
-    // this.x >= 300 && this.x < 510 && this.y < 239
+    if(siego.time.getTime() === 40000) gameOver()
 }
 
+function drawKeys(){
+    imageKey = new Image()
+    imageKey.src = images.keys
+        if(!keys) ctx.drawImage(imageKey, 270, 350, 30, 30)
+}
 
 //Funcion para separar audio
 function panning(audio, panSide){ //panSide needs number
@@ -577,16 +595,15 @@ function panning(audio, panSide){ //panSide needs number
     return htmlAudio
 }
 
-function gameOver(time){
+function gameOver(){
     //ctx.drawImage(images.gameOver, canvas.width, canvas.height) //MARCA ERROR QUE IMAGEN NO ES VALIDA
+    if(player1){
+        player2 = siego.time.getTime()
+        ctx.font = '48px'
+        ctx.fillText(checkWinner(player1, player2), canvas.width/2, canvas.height/2) //Imprima texto con el ganador
+    } else {player1 = time.getTime()} //para que ponga el tiempo de cada jugador
     siego.resetValues()
     bg.resetValues()
-    if(player1){
-        player2 = time
-    } else {player1 = time} //para que ponga el tiempo de cada jugador
-    ctx.font = '48px'
-    ctx.fillText(checkWinner(player1, player2), canvas.width/2, canvas.height/2) //Imprima texto con el ganador
-
 }
 
 function startGame(){
@@ -595,12 +612,16 @@ function startGame(){
 }
 
 function checkWinner(time1, time2){
-    let min1 = time1/60000
-    let min2 = time2/60000
+    let min1 = Math.floor(time1 / 60000);
+    let sec1 = ((time1 % 60000) / 1000).toFixed(0);
+    let elapsedTime1 = mi1 + ":" + (sec1 < 10 ? '0' : '') + sec1;
+    let min2 = Math.floor(time2 / 60000);
+    let sec2 = ((time2 % 60000) / 1000).toFixed(0);
+    let elapsedTime2 = min2 + ":" + (sec2 < 10 ? '0' : '') + sec2;
     if(min1 > min2){
-        return `Player 2 has won, time:${min2}`
+        return `Player 2 has won, time:${elapsedTime2}`
     } else if(min2 > min1) {
-        return `Player 1 has won, time${min1}`
+        return `Player 1 has won, time${elapsedTime1}`
     } else {
         return `Draw`
     }
@@ -610,7 +631,7 @@ function checkWinner(time1, time2){
 window.onload = function() {
     document.getElementById("start-button").onclick = function() {
         startGame()
-        document.addEventListener('keydown', ({ keyCode }) => {
+        document.addEventListener('keydown', ({keyCode}) => {
             rommie.goKitchen()
             if(frames % 1200 === 0){
                 this.goComputer()
@@ -627,6 +648,10 @@ window.onload = function() {
                 break
                 case 37:
                     siego.goLeft()
+                break
+                case 32:
+                    siego.grab()
+                break
                 default: console.warn('Key not valid')
             }
           })
