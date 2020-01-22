@@ -625,6 +625,7 @@ function startGame(){
 
 function endGame(){
     clearInterval(interval)
+    soundArr = []
     frames = 0
 }
 

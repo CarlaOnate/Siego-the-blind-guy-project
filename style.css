@@ -1,14 +1,70 @@
+*{
+    font-family: 'Roboto Mono', monospace;
+}
+
 body{
+    margin: 0;
+    padding: 0;
+}
+
+#pantalla-inicial{
+    display: flex;
+    height: 100vh;
+    flex-flow: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+}
+
+#pantalla-inicial img{
+    display: block;
+    align-self: center;
+    width: 50%;
+}
+
+
+h1{
+    margin: 0;
+    font-size: 4rem;
+    justify-content: center;
+    padding: 2%;
+}
+
+h2{
+    margin: 0;
+    font-size: 3rem;
+    padding: 0;
+    padding-bottom: 10%;
+}
+
+#pantalla-inicial button{
+    color: white;
+    font-size: 1.2rem;
+    width: 15%;
+    height: 10%;
+    margin: 5%;
+    background-color: #C13420;
+    border: 3px solid #FF8F00 ;
+    box-shadow: 5px 5px orange,
+    -5px 5px yellow;
+}
+
+#pantalla-juego{
+    display: none;
 
 }
 
 #game-board{
-    display: flex;
+    display: none;
     align-items: center;
     justify-content: center;
-    padding: 5%;   
+    padding: 5%;
 }
 
 canvas{
     border: 1px solid;
+}
+
+#pantalla-final{
+    visibility: hidden;
 }
