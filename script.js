@@ -292,7 +292,13 @@ class Siego{
                 } else if(this.y >= 167 && this.y < 240){
                     this.playSound(audios.couch, 0) //Both
                 } else if(this.y >= 270 && this.y < 330){
-                    this.playSound(audios.books, 1) //Right
+                    if(this.y >= 270 && this.y < 320){
+                        if(this.x >= 230 && this.x < 290){ // 270x, 350y
+                            this.playSound(audios.keys, 1) //Right
+                        } else {
+                            this.playSound(audios.books, 1) //Right
+                        }
+                    }
                 } else {
                     this.playSound(audios.empty, 0)
                 }
@@ -300,7 +306,13 @@ class Siego{
             case 'W':
                 soundArr.forEach(sound => sound.pause())
                 if(this.y >= 270 && this.y < 330){
-                    this.playSound(audios.books, -1) //Left
+                    if(this.y >= 270 && this.y < 320){
+                        if(this.x >= 230 && this.x < 290){ // 270x, 350y
+                            this.playSound(audios.keys, -1) //Left
+                        } else {
+                            this.playSound(audios.books, -1) //Left
+                        }
+                    }
                 } else {
                     this.playSound(audios.empty, 0)
                 }
@@ -525,9 +537,7 @@ class Rommie{
         } else if(this.x === 700){
             this.goBack()
         } else if(this.y === 230){
-            if(frames % 2400 === 0){ //paso el minuto
-                checkWinner() //REVISAR LO DE LA LLAVE!, ya que acabe el tiempo.
-            }
+            this.goRight()
         }
     }
 
@@ -600,12 +610,11 @@ function gameOver(){
     //ctx.drawImage(images.gameOver, canvas.width, canvas.height) //MARCA ERROR QUE IMAGEN NO ES VALIDA
     if(player1){
         player2 = Math.floor(frames/40)
-        ctx.font = '48px'
+        ctx.font = '100px serif'
         ctx.fillText(checkWinner(player1, player2), canvas.width/2, canvas.height/2) //Imprima texto con el ganador
     } else {player1 = Math.floor(frames/40)} //para que ponga el tiempo de cada jugador
     siego.resetValues()
-    bg.resetValues()
-    key = false
+    keys = false
     frames = 0
 }
 
@@ -614,12 +623,20 @@ function startGame(){
     interval = setInterval(update, 1000/40)
 }
 
+function endGame(){
+    clearInterval(interval)
+    frames = 0
+}
+
 function checkWinner(time1, time2){
     if(time1 > time2){
-        return `Player 2 has won, time:${time2} seconds`
+        endGame()
+        return `Player 2 has won, time: ${time2} seconds`
     } else if(time2 > time1) {
-        return `Player 1 has won, time${time1} seconds`
+        endGame()
+        return `Player 1 has won, time ${time1} seconds`
     } else {
+        endGame()
         return `Draw`
     }
 }
@@ -629,15 +646,15 @@ window.onload = function() {
     document.getElementById("start-button").onclick = function() {
         startGame()
         document.addEventListener('keydown', ({keyCode}) => {
-            rommie.goKitchen()
             if(frames % 1200 === 0){
-                this.goComputer()
+                rommie.goComputer()
             }
             switch (keyCode) {
                 case 40:
                     siego.goBack()
                     break
                 case 38:
+                    rommie.goKitchen()
                     siego.goForward()
                     break
                 case 39:
