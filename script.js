@@ -1,5 +1,6 @@
 let canvas = document.querySelector('canvas')
 let ctx = canvas.getContext('2d')
+let timeP = document.querySelector('#time-text')
 // const orientationArr = ['S','W','N','E']
 let interval
 let soundArr = []
@@ -128,7 +129,6 @@ class Siego{
         this.y -= 20
         this.move()
         this.checkSound()
-        // this.checkBoundaries()
     }
 
     goBack(){
@@ -136,7 +136,6 @@ class Siego{
         this.y += 20
         this.move()
         this.checkSound()
-        // this.checkBoundaries()
     }
 
     goRight(){
@@ -144,7 +143,6 @@ class Siego{
         this.x += 20
         this.move()
         this.checkSound()
-        // this.checkBoundaries()
     }
 
     goLeft(){
@@ -152,11 +150,10 @@ class Siego{
         this.x -= 20
         this.move()
         this.checkSound()
-        // this.checkBoundaries()
     }
 
     checkSound(){ //Checa que section esta el jugador
-        if(this.x > 80 && this.x <= 180){
+        if(this.x > 0 && this.x <= 180){
             this.sectionOne()
         } else if(this.x > 180 && this.x < 300){
             this.sectionTwo()
@@ -173,6 +170,14 @@ class Siego{
 
     playSound(audio, direction){
         panning(audio, direction)
+    }
+
+    checkBoundaries(){
+        console.log('boundaries', this.x, canvas.width)
+        if(this.x < 50) this.x += 5
+        if(this.y < 10) this.y += 5
+        if(this.x > canvas.width - 50) this.x -= 5
+        if(this.y > canvas.height - 100) this.y -= 5
     }
 
     // checkBoundaries(){ //Vamos por secciones de y, y despues vemos lo de x.
@@ -471,7 +476,7 @@ class Siego{
                 soundArr.forEach(sound => sound.pause())
                 this.playSound(audios.empty, 0)
                 break
-            default: console.error('orientation is undifined, perhaps')
+            default: console.error('orientation is undefined, perhaps')
         }
     }
 }
@@ -576,9 +581,8 @@ function update(){
     drawKeys()
     siego.draw()
     rommie.draw()
-    ctx.rect(300, 0, 210, 100) //, ,  width, height, es de 300 a 510x y 0 a 100y TABLE
-    ctx.rect(300, 168, 210, 71) //de 300 a 510x  y de 168 a 239y COUCH
-    ctx.stroke()
+    siego.checkBoundaries()
+    printTime()
     if(frames === 2400) gameOver()
 }
 
@@ -642,27 +646,31 @@ function checkWinner(time1, time2){
     }
 }
 
-function style(){
+function printTime(){
+    timeP.innerHTML = `Current time: ${Math.floor(frames/40)}`
+
+}
+
+function styleGameBoard(){
+    let nav = document.querySelector('nav')
     let juego = document.querySelector("#pantalla-juego")
     let canvasDiv = document.querySelector('#game-board')
     let inicio = document.querySelector("#pantalla-inicial")
     let final = document.querySelector("#pantalla-final")
+    nav.style.display = 'flex'
     inicio.style.display = 'none'
     juego.style.display = 'flex'
     canvasDiv.style.display = 'flex'
 }
 
 document.getElementById("but-initial").onclick = function() {
-    style()
+    styleGameBoard()
 }
 
 window.onload = function() {
     document.getElementById("start-button").onclick = function() {
         startGame()
         document.addEventListener('keydown', ({keyCode}) => {
-            if(frames % 1200 === 0){
-                rommie.goComputer()
-            }
             switch (keyCode) {
                 case 40:
                     siego.goBack()
@@ -675,6 +683,7 @@ window.onload = function() {
                     siego.goRight()
                 break
                 case 37:
+                    rommie.goComputer()
                     siego.goLeft()
                 break
                 case 32:

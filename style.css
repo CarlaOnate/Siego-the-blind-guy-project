@@ -69,6 +69,11 @@ nav h2{
     padding: 0;
 }
 
+nav p{
+    color: #0497A5;
+    padding-left: 10%;
+}
+
 #pantalla-juego{
     display: none;
     flex-flow: row;
