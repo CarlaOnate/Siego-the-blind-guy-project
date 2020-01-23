@@ -709,6 +709,6 @@ window.onload = function() {
     }
 }
 
-document.getElementById('reset-but').onclick(() => {
+document.getElementById('reset-but').onclick = () => {
     window.location.reload(true)
-})
+}
