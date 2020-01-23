@@ -7,8 +7,9 @@ let canvasDiv = document.querySelector('#game-board')
 let inicio = document.querySelector("#pantalla-inicial")
 let final = document.querySelector("#pantalla-final")
 let winnerText = document.querySelector('#winner-text')
-let audioCtx
-let panNode
+// let audioCtx
+// let panNode
+// let source
 
 // const orientationArr = ['S','W','N','E']
 let interval
@@ -38,20 +39,32 @@ const audios = {
     stove: 'audioSource/kitchen.mp3'
 }
 
+// function panning(audio, panSide){ //panSide needs number
+//     let audioCtx = new AudioContext()
+//     let htmlAudio = document.createElement('audio')
+//     htmlAudio.src = `${audio}`
+//     htmlAudio.loop = false //para que no repita
+//     let source = audioCtx.createMediaElementSource(htmlAudio)
+//     let panNode = audioCtx.createStereoPanner()
+//     audioCtx.destination
+//     source.connect(panNode)
+//     panNode.connect(audioCtx.destination)
+//     panNode.pan.value = panSide
+//     htmlAudio.play()
+//     return htmlAudio
+// }
+
 function initializeAudios(){
     audioCtx = new AudioContext()
-    panNode = audioCtx.createStereoPanner()
     for(let [key, value] of Object.entries(audios)){
         let htmlAudio = document.createElement('audio')
         htmlAudio.src = `${value}`
-        // htmlAudio.loop = false //para que no repita
-        //  soundArr.push(htmlAudio)
         audios[key] = htmlAudio
+        panNode = audioCtx.createStereoPanner()
+        source = audioCtx.createMediaElementSource(htmlAudio)
         audioCtx.destination
-        let source = audioCtx.createMediaElementSource(htmlAudio)
         source.connect(panNode)
         panNode.connect(audioCtx.destination)
-        // let panNode = audioCtx.createStereoPanner()
     }
 }
 
@@ -194,9 +207,6 @@ class Siego{
         }
     }
 
-    playSound(audio, direction){
-        panning(audio, direction)
-    }
 
     checkBoundaries(){
         if(this.x < 50) this.x += 5
@@ -244,13 +254,13 @@ class Siego{
                     audios[key].pause()
                 }
                 if (this.y > 0 && this.y < 85){
-                    this.playSound(audios.sink, -1) //left
+                    panning(audios.sink, -1) //left
                 } else if(this.y >= 85 && this.y < 185){
-                    this.playSound(audios.stove, -1) //left
+                    panning(audios.stove, -1) //left
                 } else if(this.y >= 185 && this.y < 240){
-                    this.playSound(audios.microwave, -1) //left
+                    panning(audios.microwave, -1) //left
                 } else if(this.y >= 260 && this.y < 330){
-                    this.playSound(audios.books, -1) //left
+                    panning(audios.books, -1) //left
                 }
                 break
             case 'S':
@@ -259,13 +269,13 @@ class Siego{
                 }
             //   soundArr.forEach(sound => sound.pause())
                 if (this.y > 0 && this.y < 85){
-                    this.playSound(audios.sink, 1)//right
+                    panning(audios.sink, 1)//right
                 } else if(this.y >= 85 && this.y < 185){
-                    this.playSound(audios.stove, 1) //right
+                    panning(audios.stove, 1) //right
                 } else if(this.y >= 185 && this.y < 240){
-                    this.playSound(audios.microwave, 1) //right
+                    panning(audios.microwave, 1) //right
                 } else if(this.y >= 260 && this.y < 330){
-                    this.playSound(audios.books, 0) //Both
+                    panning(audios.books, 0) //Both
                 }
                 break
             case 'E':
@@ -274,7 +284,7 @@ class Siego{
                 }
                 // soundArr.forEach(sound => sound.pause())
                 if(this.y >= 240 && this.y < 330){
-                    this.playSound(audios.books, 1) //Right
+                    panning(audios.books, 1) //Right
                 }
                 break
             case 'W':
@@ -283,13 +293,13 @@ class Siego{
                 }
                 // soundArr.forEach(sound => sound.pause())
                 if (this.y > 0 && this.y < 85){
-                    this.playSound(audios.sink, 0)//Both
+                    panning(audios.sink, 0)//Both
                 } else if(this.y >= 85 && this.y < 185){
-                    this.playSound(audios.stove, 0) //Both
+                    panning(audios.stove, 0) //Both
                 } else if(this.y >= 185 && this.y < 240){
-                    this.playSound(audios.microwave, 0) //Both
+                    panning(audios.microwave, 0) //Both
                 } else if(this.y >= 260 && this.y < 320){
-                    this.playSound(audios.books, 0) //Both
+                    panning(audios.books, 0) //Both
                 }
                 break
             default: console.error('orientation is undifined, perhaps')
@@ -304,11 +314,11 @@ class Siego{
                 }
                 // soundArr.forEach(sound => sound.pause())
                 if (this.y > 0 && this.y < 90){
-                    this.playSound(audios.table, 1) //right
+                    panning(audios.table, 1) //right
                 }  else if(this.y >= 167 && this.y < 240){
-                    this.playSound(audios.couch, 1) //right
+                    panning(audios.couch, 1) //right
                 } else {
-                    this.playSound(audios.empty, 0)
+                    panning(audios.empty, 0)
                 }
                 break
             case 'S':
@@ -317,17 +327,17 @@ class Siego{
                 }
                 // soundArr.forEach(sound => sound.pause())
                 if (this.y > 0 && this.y < 90){
-                    this.playSound(audios.table, -1)//left
+                    panning(audios.table, -1)//left
                 } else if(this.y >= 167 && this.y < 240){
-                    this.playSound(audios.couch, -1) //left
+                    panning(audios.couch, -1) //left
                 } else if(this.y >= 240 && this.y < 330){
                         if(this.x >= 250 && this.x < 290){ // 270x, 350y
-                            this.playSound(audios.keys, 0) //Both
+                            panning(audios.keys, 0) //Both
                         } else {
-                            this.playSound(audios.books, 0) //Both
+                            panning(audios.books, 0) //Both
                         }
                 } else {
-                    this.playSound(audios.empty, 0)
+                    panning(audios.empty, 0)
                 }
                 break
             case 'E':
@@ -336,18 +346,18 @@ class Siego{
                 }
                 // soundArr.forEach(sound => sound.pause())
                 if (this.y > 0 && this.y < 90){
-                    this.playSound(audios.table, 0)//Both
+                    panning(audios.table, 0)//Both
                 } else if(this.y >= 167 && this.y < 240){
-                    this.playSound(audios.couch, 0) //Both
+                    panning(audios.couch, 0) //Both
                 } else if(this.y >= 240 && this.y < 330){
                     // if(this.y >= 20 && this.y < 320){
                         if(this.x >= 250 && this.x < 290){ // 270x, 350y
-                            this.playSound(audios.keys, 1) //Right
+                            panning(audios.keys, 1) //Right
                         } else {
-                            this.playSound(audios.books, 1) //Right
+                            panning(audios.books, 1) //Right
                     }
                 } else {
-                    this.playSound(audios.empty, 0)
+                    panning(audios.empty, 0)
                 }
                 break
             case 'W':
@@ -357,12 +367,12 @@ class Siego{
                 // soundArr.forEach(sound => sound.pause())
                 if(this.y >= 240 && this.y < 330){
                         if(this.x >= 250 && this.x < 290){ // 270x, 350y
-                            this.playSound(audios.keys, -1) //Left
+                            panning(audios.keys, -1) //Left
                         } else {
-                            this.playSound(audios.books, -1) //Left
+                            panning(audios.books, -1) //Left
                         }
                 } else {
-                    this.playSound(audios.empty, 0)
+                    panning(audios.empty, 0)
                 }
                 break
             default: console.error('orientation is undifined, perhaps')
@@ -377,9 +387,9 @@ class Siego{
                 }
                 // soundArr.forEach(sound => sound.pause())
                 if (this.y >= 70 && this.y < 150){
-                    this.playSound(audios.table, 0) //Both
+                    panning(audios.table, 0) //Both
                 }  else if(this.y >= 239 && this.y < 330){
-                    this.playSound(audios.couch, 0) //Both
+                    panning(audios.couch, 0) //Both
                 }
                 break
             case 'S':
@@ -388,9 +398,9 @@ class Siego{
                 }
                 // soundArr.forEach(sound => sound.pause())
                 if (this.y >= 80 && this.y < 169){
-                    this.playSound(audios.couch, 0)//Both
+                    panning(audios.couch, 0)//Both
                 } else if(this.y >= 220 && this.y < 330){
-                    this.playSound(audios.tv, 0) //Both
+                    panning(audios.tv, 0) //Both
                 }
                 break
             case 'E':
@@ -398,12 +408,12 @@ class Siego{
                     audios[key].pause()
                 }
                 // soundArr.forEach(sound => sound.pause())
-                if (this.y >= 80 && this.y < 150){
-                    this.playSound(audios.table, -1)//Left
-                    this.playSound(audios.couch, 1)//Right
-                } else if(this.y >= 239 && this.y < 330){
-                    this.playSound(audios.couch, -1) //Left
-                    this.playSound(audios.tv, 1) //Right
+                if (this.y >= 70 && this.y < 150){
+                    panning(audios.table, -1)//Left
+                    panning(audios.couch, 1)//Right
+                } else if(this.y >= 220 && this.y < 330){
+                    panning(audios.couch, -1) //Left
+                    panning(audios.tv, 1) //Right
                 }
                 break
             case 'W':
@@ -412,11 +422,11 @@ class Siego{
                 }
                 // soundArr.forEach(sound => sound.pause())
                 if (this.y >= 80 && this.y < 150){
-                    this.playSound(audios.table, 1)//Right
-                    this.playSound(audios.couch, -1)//Left
+                    panning(audios.table, 1)//Right
+                    panning(audios.couch, -1)//Left
                 } else if(this.y >= 240 && this.y < 330){
-                    this.playSound(audios.couch, 1) //Right
-                    this.playSound(audios.tv, -1) //Left
+                    panning(audios.couch, 1) //Right
+                    panning(audios.tv, -1) //Left
                 }
                 break
             default: console.error('orientation is undifined, perhaps')
@@ -431,9 +441,9 @@ class Siego{
                 }
                 // soundArr.forEach(sound => sound.pause())
                 if (this.y >= 0 && this.y < 90){
-                    this.playSound(audios.table, -1) //Left
+                    panning(audios.table, -1) //Left
                 }  else if(this.y >= 167 && this.y < 210){
-                    this.playSound(audios.couch, -1) //Left
+                    panning(audios.couch, -1) //Left
                 }
                 break
             case 'S':
@@ -442,9 +452,9 @@ class Siego{
                 }
                 // soundArr.forEach(sound => sound.pause())
                 if (this.y >= 0 && this.y < 90){
-                    this.playSound(audios.table, 1)//Right
+                    panning(audios.table, 1)//Right
                 } else if(this.y >= 167 && this.y < 210){
-                    this.playSound(audios.couch, 1) //Right
+                    panning(audios.couch, 1) //Right
                 }
                 break
             case 'E':
@@ -452,7 +462,7 @@ class Siego{
                     audios[key].pause()
                 }
                 // soundArr.forEach(sound => sound.pause())
-                this.playSound(audios.empty, 0)
+                panning(audios.empty, 0)
                 break
             case 'W':
                 for(let [key, value] of Object.entries(audios)){ //iterar objetos
@@ -460,11 +470,11 @@ class Siego{
                 }
                 // soundArr.forEach(sound => sound.pause())
                 if (this.y >= 0 && this.y < 90){
-                    this.playSound(audios.table, 0)//Right
+                    panning(audios.table, 0)//Right
                 } else if(this.y >= 167 && this.y < 240){
-                    this.playSound(audios.couch, 0) //Right
+                    panning(audios.couch, 0) //Right
                 } else {
-                    this.playSound(audios.empty, 0)
+                    panning(audios.empty, 0)
                 }
                 break
             default: console.error('orientation is undifined, perhaps')
@@ -479,11 +489,11 @@ class Siego{
                 }
                 // soundArr.forEach(sound => sound.pause())
                 if (this.y >= 0 && this.y < 60){
-                    this.playSound(audios.window, 0) //Both
+                    panning(audios.window, 0) //Both
                 } else if (this.y >= 210 && this.y < 250){
-                    this.playSound(audios.computer, 1) //Right
+                    panning(audios.computer, 1) //Right
                 } else {
-                    this.playSound(audios.empty, 0)//Both
+                    panning(audios.empty, 0)//Both
                 }
                 break
             case 'S':
@@ -492,11 +502,11 @@ class Siego{
                 }
                 // soundArr.forEach(sound => sound.pause())
                 if (this.y >= 250 && this.y < 330){
-                    this.playSound(audios.phone, 0)//Both
+                    panning(audios.phone, 0)//Both
                 } else if (this.y >= 210 && this.y < 250){
-                    this.playSound(audios.computer, -1) //Left
+                    panning(audios.computer, -1) //Left
                 } else {
-                    this.playSound(audios.empty, 0)//Both
+                    panning(audios.empty, 0)//Both
                 }
                 break
             case 'E':
@@ -505,13 +515,13 @@ class Siego{
                 }
                 // soundArr.forEach(sound => sound.pause())
                 if (this.y >= 0 && this.y < 50){
-                    this.playSound(audios.window, -1)//Left
+                    panning(audios.window, -1)//Left
                 } else if (this.y >= 200 && this.y < 250){
-                    this.playSound(audios.computer, 0) //Both
+                    panning(audios.computer, 0) //Both
                 } else if(this.y >= 250 && this.y < 330){
-                    this.playSound(audios.phone, 1) //Right
+                    panning(audios.phone, 1) //Right
                 } else {
-                    this.playSound(audios.empty, 0)//Both
+                    panning(audios.empty, 0)//Both
                 }
                 break
             case 'W':
@@ -520,11 +530,11 @@ class Siego{
                 }
                 // soundArr.forEach(sound => sound.pause())
                 if (this.y >= 0 && this.y < 50){
-                    this.playSound(audios.window, 1)//Right
+                    panning(audios.window, 1)//Right
                 } else if(this.y >= 250 && this.y < 330){
-                    this.playSound(audios.phone, -1) //Left
+                    panning(audios.phone, -1) //Left
                 } else {
-                    this.playSound(audios.empty, 0)//Both
+                    panning(audios.empty, 0)//Both
                 }
                 break
             default: console.error('orientation is undifined, perhaps')
@@ -539,7 +549,7 @@ class Siego{
                 }
                 // soundArr.forEach(sound => sound.pause())
                 if (this.y >= 40 && this.y < 110){
-                    this.playSound(audios.door, 1) //Rgiht
+                    panning(audios.door, 1) //Rgiht
                 }
                 break
             case 'S':
@@ -548,7 +558,7 @@ class Siego{
                 }
                 // soundArr.forEach(sound => sound.pause())
                 if (this.y >= 40 && this.y < 110){
-                    this.playSound(audios.door, -1)//Left
+                    panning(audios.door, -1)//Left
                 }
                 break
             case 'E':
@@ -557,7 +567,7 @@ class Siego{
                 }
                 // soundArr.forEach(sound => sound.pause())
                 if (this.y >= 40 && this.y < 110){
-                    this.playSound(audios.door, 0)//Left
+                    panning(audios.door, 0)//Left
                 }
                 break
             case 'W':
@@ -565,7 +575,7 @@ class Siego{
                     audios[key].pause()
                 }
                 // soundArr.forEach(sound => sound.pause())
-                this.playSound(audios.empty, 0)
+                panning(audios.empty, 0)
                 break
             default: console.error('orientation is undefined, perhaps')
         }
@@ -685,21 +695,24 @@ function drawKeys(){
 
 //Funcion para separar audio
 function panning(audio, panSide){ //panSide needs number
-    // let audioCtx = new AudioContext()
-    htmlAudio = audio
-    // let htmlAudio = document.createElement('audio')
-    // htmlAudio.src = `${audio}`
-    // htmlAudio.loop = false //para que no repita
+    let audioCtx = new AudioContext()
+    let htmlAudio = document.createElement('audio')
+    htmlAudio.src = `${audio}`
+    htmlAudio.loop = false //para que no repita
     //  if (soundArr.includes(htmlAudio.src)) return
     // soundArr.push(htmlAudio)
-    // let source = audioCtx.createMediaElementSource(htmlAudio)
-    // let panNode = audioCtx.createStereoPanner()
-    // audioCtx.destination
-    // source.connect(panNode)
-    // panNode.connect(audioCtx.destination)
+    let source = audioCtx.createMediaElementSource(htmlAudio)
+    let panNode = audioCtx.createStereoPanner()
+    audioCtx.destination
+    source.connect(panNode)
+    panNode.connect(audioCtx.destination)
     panNode.pan.value = panSide
     htmlAudio.play()
     return htmlAudio
+    // htmlAudio = audio
+    // panNode.pan.value = panSide
+    // htmlAudio.play()
+    // return htmlAudio
 }
 
 function gameOver(){
@@ -770,7 +783,7 @@ document.getElementById("but-initial").onclick = function() {
 
 window.onload = function() {
     document.getElementById("start-button").onclick = function() {
-        initializeAudios()
+        // initializeAudios()
         startGame()
         document.addEventListener('keydown', ({keyCode}) => {
             switch (keyCode) {
