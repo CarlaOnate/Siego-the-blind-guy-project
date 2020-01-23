@@ -1,6 +1,12 @@
 let canvas = document.querySelector('canvas')
 let ctx = canvas.getContext('2d')
 let timeP = document.querySelector('#time-text')
+let nav = document.querySelector('nav')
+let juego = document.querySelector("#pantalla-juego")
+let canvasDiv = document.querySelector('#game-board')
+let inicio = document.querySelector("#pantalla-inicial")
+let final = document.querySelector("#pantalla-final")
+let winnerText = document.querySelector('#winner-text')
 // const orientationArr = ['S','W','N','E']
 let interval
 let soundArr = []
@@ -583,7 +589,7 @@ function update(){
     rommie.draw()
     siego.checkBoundaries()
     printTime()
-    if(frames === 2400) gameOver()
+    if(frames === 1600) gameOver()
 }
 
 function drawKeys(){
@@ -611,11 +617,10 @@ function panning(audio, panSide){ //panSide needs number
 }
 
 function gameOver(){
-    //ctx.drawImage(images.gameOver, canvas.width, canvas.height) //MARCA ERROR QUE IMAGEN NO ES VALIDA
     if(player1){
         player2 = Math.floor(frames/40)
         ctx.font = '100px serif'
-        ctx.fillText(checkWinner(player1, player2), canvas.width/2, canvas.height/2) //Imprima texto con el ganador
+        checkWinner(player1, player2)
     } else {player1 = Math.floor(frames/40)} //para que ponga el tiempo de cada jugador
     siego.resetValues()
     keys = false
@@ -634,29 +639,38 @@ function endGame(){
 }
 
 function checkWinner(time1, time2){
-    if(time1 > time2){
-        endGame()
-        return `Player 2 has won, time: ${time2} seconds`
-    } else if(time2 > time1) {
-        endGame()
-        return `Player 1 has won, time ${time1} seconds`
-    } else {
-        endGame()
-        return `Draw`
-    }
+    styleFinal(time1, time2)
+    endGame()
+    // if(time1 > time2){
+    //     endGame()
+    //     winnerText.innerHTML = `Player 2 has won, time: ${time2} seconds`
+    // } else if(time2 > time1) {
+    //     endGame()
+    //     winnerText.innerHTML = `Player 1 has won, time ${time1} seconds`
+    // } else {
+    //     endGame()
+    //     winnerText.innerHTML = `Draw`
+    //}
 }
 
 function printTime(){
     timeP.innerHTML = `Current time: ${Math.floor(frames/40)}`
+}
 
+function styleFinal(time1, time2){
+    nav.style.display = 'none'
+    juego.style.display = 'none'
+    final.style.display = 'flex'
+    if(time1 > time2){
+        winnerText.innerHTML = `Player 2 has won, time: ${time2} seconds`
+    } else if(time2 > time1) {
+        winnerText.innerHTML = `Player 1 has won, time: ${time1} seconds`
+    } else {
+        winnerText.innerHTML = `Draw with ${time1} seconds`
+    }
 }
 
 function styleGameBoard(){
-    let nav = document.querySelector('nav')
-    let juego = document.querySelector("#pantalla-juego")
-    let canvasDiv = document.querySelector('#game-board')
-    let inicio = document.querySelector("#pantalla-inicial")
-    let final = document.querySelector("#pantalla-final")
     nav.style.display = 'flex'
     inicio.style.display = 'none'
     juego.style.display = 'flex'
@@ -694,3 +708,7 @@ window.onload = function() {
           })
     }
 }
+
+document.getElementById('reset-but').onclick(() => {
+    window.location.reload(true)
+})

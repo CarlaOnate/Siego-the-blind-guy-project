@@ -171,5 +171,36 @@ canvas{
 }
 
 #pantalla-final{
-    visibility: hidden;
+    display: none;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+#pantalla-final p:first-of-type{
+    font-size: 2rem;
+}
+
+#pantalla-final img{
+    height: 20vh;
+}
+
+#pantalla-final p:nth-child(3), #pantalla-final p:last-of-type{
+    margin-top: 0;
+    padding-top: 0;
+    font-size: 1.2rem;
+    color: #197A17;
+}
+
+#reset-but{
+    color: white;
+    font-size: 1.2rem;
+    width: 15%;
+    height: 10%;
+    margin: 4%;
+    background-color: #C13420;
+    border: 3px solid #FF8F00 ;
+    box-shadow: 5px 5px orange,
+    -5px 5px yellow;
 }
