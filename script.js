@@ -642,7 +642,20 @@ function checkWinner(time1, time2){
     }
 }
 
-//Para el sonido puedes borrar esto
+function style(){
+    let juego = document.querySelector("#pantalla-juego")
+    let canvasDiv = document.querySelector('#game-board')
+    let inicio = document.querySelector("#pantalla-inicial")
+    let final = document.querySelector("#pantalla-final")
+    inicio.style.display = 'none'
+    juego.style.display = 'flex'
+    canvasDiv.style.display = 'flex'
+}
+
+document.getElementById("but-initial").onclick = function() {
+    style()
+}
+
 window.onload = function() {
     document.getElementById("start-button").onclick = function() {
         startGame()
