@@ -14,6 +14,7 @@ the player is looking right at the stove the sound will be on both headphones, t
 
 ## Where to play it?
 ![](https://res.cloudinary.com/dxxdamndt/image/upload/v1583876351/ezgif.com-video-to-gif_3_zurhqz.gif)
+
 You can play this with the following link:
 
 https://carlaonate.github.io/Siego-the-blind-guy-project/
