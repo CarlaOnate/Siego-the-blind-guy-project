@@ -12,7 +12,7 @@ How does it work:
 then he will hear the stove on the right headphone if the player is on the left side the sound will be on the left headphone and if
 the player is looking right at the stove the sound will be on both headphones, this helps the player know where he is and what is around him.
 
-##Where to play it?
+Where to play it?
 
 You can play this with the following link:
 
