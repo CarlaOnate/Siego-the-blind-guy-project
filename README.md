@@ -13,7 +13,7 @@ then he will hear the stove on the right headphone if the player is on the left 
 the player is looking right at the stove the sound will be on both headphones, this helps the player know where he is and what is around him.
 
 ## Where to play it?
-
+![](https://res.cloudinary.com/dxxdamndt/image/upload/v1583876351/ezgif.com-video-to-gif_3_zurhqz.gif)
 You can play this with the following link:
 
 https://carlaonate.github.io/Siego-the-blind-guy-project/
